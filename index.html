@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Let Connect VPN - Safe & Fast VPN</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6c63ff;
+      --primary-dark: #5a52d5;
+      --accent: #00d4aa;
+      --accent2: #00b4d8;
+      --dark: #0a0e27;
+      --dark2: #121638;
+      --dark3: #1a1f4e;
+      --gold: #ffd700;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ============ ANIMATED BACKGROUND ============ */
+    .bg-animation {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-animation .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      animation: floatOrb 20s infinite ease-in-out;
+    }
+
+    .bg-animation .orb:nth-child(1) {
+      width: 600px; height: 600px;
+      background: var(--primary);
+      top: -200px; left: -200px;
+      animation-delay: 0s;
+    }
+
+    .bg-animation .orb:nth-child(2) {
+      width: 500px; height: 500px;
+      background: var(--accent);
+      bottom: -150px; right: -150px;
+      animation-delay: -7s;
+    }
+
+    .bg-animation .orb:nth-child(3) {
+      width: 400px; height: 400px;
+      background: var(--accent2);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -14s;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(50px, -80px) scale(1.1); }
+      50% { transform: translate(-30px, 60px) scale(0.9); }
+      75% { transform: translate(70px, 30px) scale(1.05); }
+    }
+
+    /* ============ PARTICLES ============ */
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: rgba(108, 99, 255, 0.6);
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ============ NAVBAR ============ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 15px 0;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(0px);
+    }
+
+    .navbar.scrolled {
+      background: rgba(10, 14, 39, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+      padding: 10px 0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 45px; height: 45px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+    }
+
+    .nav-logo-text {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 35px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-download-btn {
+      padding: 10px 28px;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+    }
+
+    .nav-download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(108, 99, 255, 0.5);
+    }
+
+    /* Mobile menu */
+    .mobile-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .mobile-toggle span {
+      width: 28px; height: 3px;
+      background: #fff;
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      padding: 120px 30px 80px;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-text { z-index: 2; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 25px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+
+    .hero h1 {
+      font-size: 3.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 25px;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 520px;
+      animation: fadeInUp 0.8s ease 0.4s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      border: none;
+      border-radius: 60px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(108, 99, 255, 0.6);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: transparent;
+      border: 2px solid rgba(108, 99, 255, 0.4);
+      border-radius: 60px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(108, 99, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .shield-container {
+      position: relative;
+      width: 350px; height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shield-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid;
+      animation: rotateRing 15s linear infinite;
+    }
+
+    .shield-ring:nth-child(1) {
+      width: 100%; height: 100%;
+      border-color: rgba(108, 99, 255, 0.2);
+      animation-direction: normal;
+    }
+
+    .shield-ring:nth-child(2) {
+      width: 80%; height: 80%;
+      border-color: rgba(0, 212, 170, 0.2);
+      animation-direction: reverse;
+      animation-duration: 12s;
+    }
+
+    .shield-ring:nth-child(3) {
+      width: 60%; height: 60%;
+      border-color: rgba(0, 180, 216, 0.2);
+      animation-duration: 10s;
+    }
+
+    .shield-ring .ring-dot {
+      position: absolute;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      top: -5px; left: 50%;
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .shield-icon {
+      font-size: 80px;
+      z-index: 2;
+      animation: shieldPulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(108, 99, 255, 0.5));
+    }
+
+    @keyframes shieldPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Stats bar */
+    .hero-stats {
+      display: flex;
+      gap: 50px;
+      margin-top: 50px;
+      animation: fadeInUp 0.8s ease 0.8s both;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ FEATURES ============ */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 100px 30px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      background: rgba(108, 99, 255, 0.1);
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .section-header p {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .feature-card {
+      background: rgba(18, 22, 56, 0.6);
+      border: 1px solid rgba(108, 99, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px 30px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(108, 99, 255, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      width: 65px; height: 65px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 22px;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(0, 212, 170, 0.1));
+      border: 1px solid rgba(108, 99, 255, 0.15);
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    /* ============ COMPARISON ============ */
+    .comparison {
+      position: relative;
+      z-index: 1;
+      padding: 100px 30px;
+    }
+
+    .comparison-table-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(18, 22, 56, 0.6);
+      border: 1px solid rgba(108, 99, 255, 0.15);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .comp-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      background: rgba(108, 99, 255, 0.1);
+      padding: 20px 30px;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .comp-header span:nth-child(2) { text-align: center; }
+    .comp-header span:nth-child(3) {
+      text-align: center;
+      color: var(--gold);
+    }
+
+    .comp-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 18px 30px;
+      border-bottom: 1px solid rgba(108, 99, 255, 0.07);
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .comp-row:hover {
+      background: rgba(108, 99, 255, 0.05);
+    }
+
+    .comp-row:last-child { border-bottom: none; }
+
+    .comp-row span { display: flex; align-items: center; }
+    .comp-row span:nth-child(2),
+    .comp-row span:nth-child(3) { justify-content: center; }
+
+    .check { color: var(--accent); font-size: 1.3rem; }
+    .cross { color: #ff6b6b; font-size: 1.3rem; }
+    .star { color: var(--gold); font-size: 1.3rem; }
+
+    /* ============ PRICING ============ */
+    .pricing {
+      position: relative;
+      z-index: 1;
+      padding: 100px 30px;
+    }
+
+    .pricing-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: rgba(18, 22, 56, 0.6);
+      border: 1px solid rgba(108, 99, 255, 0.15);
+      border-radius: 24px;
+      padding: 45px 35px;
+      text-align: center;
+      position: relative;
+      transition: all 0.4s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-card.popular {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(108, 99, 255, 0.1), rgba(18, 22, 56, 0.8));
+      box-shadow: 0 0 40px rgba(108, 99, 255, 0.15);
+      transform: scale(1.05);
+    }
+
+    .price-card.popular:hover {
+      transform: scale(1.05) translateY(-10px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -14px; left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      padding: 6px 24px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .price-duration {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    .price-amount {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .price-amount .currency {
+      font-size: 1.2rem;
+      font-weight: 600;
+      vertical-align: top;
+      color: var(--text-dim);
+    }
+
+    .price-period {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+
+    .price-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 35px;
+      flex-grow: 1;
+    }
+
+    .price-features li {
+      padding: 10px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .price-features li:last-child { border-bottom: none; }
+
+    .price-features li .pf-icon {
+      color: var(--accent);
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .gift-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      color: var(--gold);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+
+    .btn-price {
+      display: block;
+      padding: 15px;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-price.outline {
+      background: transparent;
+      border: 2px solid rgba(108, 99, 255, 0.4);
+      color: #fff;
+    }
+
+    .btn-price.outline:hover {
+      border-color: var(--accent);
+      background: rgba(108, 99, 255, 0.1);
+    }
+
+    .btn-price.filled {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(108, 99, 255, 0.3);
+    }
+
+    .btn-price.filled:hover {
+      box-shadow: 0 10px 30px rgba(108, 99, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ============ DOWNLOAD SECTION ============ */
+    .download-section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 30px;
+    }
+
+    .download-card {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(0, 180, 216, 0.1));
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      border-radius: 32px;
+      padding: 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-card::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 300px; height: 300px;
+      background: var(--primary);
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.2;
+    }
+
+    .download-info h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .download-info p {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .download-poster {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .poster-placeholder {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 9/16;
+      background: linear-gradient(135deg, var(--dark3), var(--dark2));
+      border: 2px dashed rgba(108, 99, 255, 0.3);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .poster-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .poster-icon {
+      font-size: 50px;
+      opacity: 0.5;
+    }
+
+    /* ============ CONTACT ============ */
+    .contact {
+      position: relative;
+      z-index: 1;
+      padding: 100px 30px;
+    }
+
+    .contact-grid {
+      max-width: 700px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .contact-card {
+      background: rgba(18, 22, 56, 0.6);
+      border: 1px solid rgba(108, 99, 255, 0.12);
+      border-radius: 20px;
+      padding: 35px 30px;
+      text-align: center;
+      transition: all 0.4s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(108, 99, 255, 0.3);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .contact-icon {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin: 0 auto 18px;
+    }
+
+    .contact-card.telegram .contact-icon {
+      background: linear-gradient(135deg, #0088cc, #00aaff);
+    }
+
+    .contact-card.viber .contact-icon {
+      background: linear-gradient(135deg, #7360f2, #a17fe0);
+    }
+
+    .contact-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .contact-card p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    /* ============ FOOTER ============ */
+    .footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(108, 99, 255, 0.1);
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .footer-logo-icon {
+      width: 35px; height: 35px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .footer-logo-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .footer p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    /* ============ SCROLL ANIMATION ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 968px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero h1 { font-size: 2.8rem; }
+      .hero-desc { margin: 0 auto 40px; }
+      .hero-buttons { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .price-card.popular { transform: scale(1); }
+      .price-card.popular:hover { transform: translateY(-10px); }
+      .download-card { grid-template-columns: 1fr; text-align: center; }
+      .shield-container { width: 280px; height: 280px; }
+
+      .nav-links { display: none; }
+      .nav-download-btn { display: none; }
+      .mobile-toggle { display: flex; }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.2rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 30px; }
+      .comp-header, .comp-row { padding: 14px 15px; font-size: 0.82rem; }
+      .download-card { padding: 35px 25px; }
+    }
+
+    /* ============ Smooth Scroll Top Button ============ */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(108, 99, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.6);
+    }
+
+    /* Glow line separator */
+    .glow-line {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 4px;
+      margin: 0 auto 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">🛡️</div>
+        <span class="nav-logo-text">Let Connect</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#comparison">Free vs Premium</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#download">Download</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#download" class="nav-download-btn">⬇ Download APK</a>
+      <div class="mobile-toggle" id="mobileToggle" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Secure & Fast VPN
+        </div>
+        <h1>
+          Browse Freely<br>
+          with <span class="gradient-text">Let Connect</span>
+        </h1>
+        <p class="hero-desc">
+          မြန်မာနိုင်ငံအတွက် အကောင်းဆုံး VPN ဝန်ဆောင်မှု။ 
+          ကြေညာ ads လုံးဝမပါ၊ Free နဲ့ Premium နှစ်မျိုးလုံး အသုံးပြုနိုင်ပါတယ်။
+          သင့်ရဲ့ ကိုယ်ရေးကိုယ်တာ လုံခြုံမှုကို ကာကွယ်ပေးပါမယ်။
+        </p>
+        <div class="hero-buttons">
+          <a href="#download" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download APK
+          </a>
+          <a href="#pricing" class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            View Pricing
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Servers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Ads</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="shield-container">
+          <div class="shield-ring"><div class="ring-dot"></div></div>
+          <div class="shield-ring"><div class="ring-dot"></div></div>
+          <div class="shield-ring"><div class="ring-dot"></div></div>
+          <div class="shield-icon">🛡️</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="features" id="features">
+    <div class="section-header reveal">
+      <span class="section-tag">✨ Features</span>
+      <h2>ဘာကြောင့် Let Connect ကို ရွေးချယ်သင့်သလဲ?</h2>
+      <p>အသုံးပြုသူများအတွက် အကောင်းဆုံး VPN အတွေ့အကြုံကို ပေးစွမ်းပါတယ်</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🚫</div>
+        <h3>ကြေညာလုံးဝမပါ</h3>
+        <p>Free user ဖြစ်ဖြစ် Premium user ဖြစ်ဖြစ် ကြေညာကြည့်စရာ လုံးဝမလိုပါဘူး။ သန့်ရှင်းတဲ့ VPN အတွေ့အကြုံကို ခံစားနိုင်ပါတယ်။</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🌍</div>
+        <h3>Server များစွာ</h3>
+        <p>ကမ္ဘာတစ်ဝန်းရှိ Server များစွာကို ချိတ်ဆက်အသုံးပြုနိုင်ပါတယ်။ Free Server အားလုံးကို အကန့်အသတ်မရှိ ချိတ်ဆက်နိုင်ပါတယ်။</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3>မြန်ဆန်သော ချိတ်ဆက်မှု</h3>
+        <p>အမြင့်ဆုံး မြန်နှုန်းနဲ့ တည်ငြိမ်သော ချိတ်ဆက်မှုကို ရရှိမှာဖြစ်ပါတယ်။ Premium ဆာဗာများက ပိုမိုကောင်းမွန်ပါတယ်။</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔒</div>
+        <h3>လုံခြုံမှု အပြည့်</h3>
+        <p>သင့်ရဲ့ အင်တာနက်အသုံးပြုမှုကို ကုဒ်ဝှက်ပြီး ကာကွယ်ပေးပါတယ်။ သင့်ကိုယ်ရေးအချက်အလက်များ လုံခြုံပါတယ်။</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📱</div>
+        <h3>အသုံးပြုရလွယ်ကူ</h3>
+        <p>ခလုတ်တစ်ချက်နှိပ်ရုံနဲ့ VPN ချိတ်ဆက်နိုင်ပါတယ်။ Android ဖုန်းအားလုံးမှာ အသုံးပြုနိုင်ပါတယ်။</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎁</div>
+        <h3>အထူးလက်ဆောင်များ</h3>
+        <p>Premium ဝယ်ယူသူများအတွက် LuGyi Apk VIP ကြည့်ရှုခွင့်ကို လက်ဆောင်အဖြစ် ပေးအပ်ပါတယ်။</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARISON ============ -->
+  <section class="comparison" id="comparison">
+    <div class="section-header reveal">
+      <span class="section-tag">⚖️ Comparison</span>
+      <h2>Free vs Premium ကွာခြားချက်</h2>
+      <p>သင့်အတွက် အသင့်တော်ဆုံး Plan ကို ရွေးချယ်လိုက်ပါ</p>
+    </div>
+    <div class="comparison-table-wrap reveal">
+      <div class="comp-header">
+        <span>Feature</span>
+        <span>🆓 Free</span>
+        <span>👑 Premium</span>
+      </div>
+      <div class="comp-row">
+        <span>🌍 Free Server များ အသုံးပြုခွင့်</span>
+        <span class="check">✔</span>
+        <span class="check">✔</span>
+      </div>
+      <div class="comp-row">
+        <span>🚫 ကြေညာ (Ads) မပါ</span>
+        <span class="check">✔</span>
+        <span class="check">✔</span>
+      </div>
+      <div class="comp-row">
+        <span>⏱️ ချိတ်ဆက်မှု အချိန်ကန့်သတ်ချက်</span>
+        <span style="color: var(--gold); font-size: 0.85rem;">၁ နာရီ</span>
+        <span class="star">♾️</span>
+      </div>
+      <div class="comp-row">
+        <span>🚀 Premium Server များ</span>
+        <span class="cross">✘</span>
+        <span class="check">✔</span>
+      </div>
+      <div class="comp-row">
+        <span>⚡ ပိုမြန်သော လိုင်း</span>
+        <span class="cross">✘</span>
+        <span class="check">✔</span>
+      </div>
+      <div class="comp-row">
+        <span>🎁 LuGyi Apk VIP လက်ဆောင်</span>
+        <span class="cross">✘</span>
+        <span class="check">✔</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="pricing" id="pricing">
+    <div class="section-header reveal">
+      <span class="section-tag">💎 Pricing</span>
+      <h2>Premium ဈေးနှုန်းများ</h2>
+      <p>သင့်တော်ရာ Plan ကို ရွေးချယ်ပြီး ပိုကောင်းမွန်တဲ့ VPN အတွေ့အကြုံကို ခံစားလိုက်ပါ</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- 1 Month -->
+      <div class="price-card reveal">
+        <div class="price-duration">၁ လ</div>
+        <div class="price-amount">2,000 <span class="currency">ကျပ်</span></div>
+        <div class="price-period">တစ်လစာ</div>
+        <ul class="price-features">
+          <li><span class="pf-icon">✔</span> ချိတ်ဆက်မှု အချိန်ကန့်သတ်ချက်မရှိ</li>
+          <li><span class="pf-icon">✔</span> Premium Server များ အသုံးပြုခွင့်</li>
+          <li><span class="pf-icon">✔</span> ပိုမိုကောင်းမွန်သော လိုင်းမြန်နှုန်း</li>
+          <li><span class="pf-icon">✔</span> ကြေညာ Ads လုံးဝမပါ</li>
+        </ul>
+        <div class="gift-tag">🎁 LuGyi Apk VIP ၇ ရက် ကြည့်ရှုခွင့်</div>
+        <a href="https://t.me/iqowoq" class="btn-price outline" target="_blank">ဝယ်ယူမည်</a>
+      </div>
+      <!-- 3 Months -->
+      <div class="price-card popular reveal">
+        <div class="popular-badge">🔥 လူကြိုက်အများဆုံး</div>
+        <div class="price-duration">၃ လ</div>
+        <div class="price-amount">5,000 <span class="currency">ကျပ်</span></div>
+        <div class="price-period">သုံးလစာ &nbsp;•&nbsp; တစ်လလျှင် ~၁,၆၆၇ ကျပ်</div>
+        <ul class="price-features">
+          <li><span class="pf-icon">✔</span> ချိတ်ဆက်မှု အချိန်ကန့်သတ်ချက်မရှိ</li>
+          <li><span class="pf-icon">✔</span> Premium Server များ အသုံးပြုခွင့်</li>
+          <li><span class="pf-icon">✔</span> ပိုမိုကောင်းမွန်သော လိုင်းမြန်နှုန်း</li>
+          <li><span class="pf-icon">✔</span> ကြေညာ Ads လုံးဝမပါ</li>
+        </ul>
+        <div class="gift-tag">🎁 LuGyi Apk VIP ၁ လ ကြည့်ရှုခွင့်</div>
+        <a href="https://t.me/iqowoq" class="btn-price filled" target="_blank">ဝယ်ယူမည်</a>
+      </div>
+      <!-- 5 Months -->
+      <div class="price-card reveal">
+        <div class="price-duration">၅ လ</div>
+        <div class="price-amount">8,000 <span class="currency">ကျပ်</span></div>
+        <div class="price-period">ငါးလစာ &nbsp;•&nbsp; တစ်လလျှင် ၁,၆၀၀ ကျပ်</div>
+        <ul class="price-features">
+          <li><span class="pf-icon">✔</span> ချိတ်ဆက်မှု အချိန်ကန့်သတ်ချက်မရှိ</li>
+          <li><span class="pf-icon">✔</span> Premium Server များ အသုံးပြုခွင့်</li>
+          <li><span class="pf-icon">✔</span> ပိုမိုကောင်းမွန်သော လိုင်းမြန်နှုန်း</li>
+          <li><span class="pf-icon">✔</span> ကြေညာ Ads လုံးဝမပါ</li>
+        </ul>
+        <div class="gift-tag">🎁 LuGyi Apk VIP ၃ လ ကြည့်ရှုခွင့်</div>
+        <a href="https://t.me/iqowoq" class="btn-price outline" target="_blank">ဝယ်ယူမည်</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOWNLOAD ============ -->
+  <section class="download-section" id="download">
+    <div class="section-header reveal">
+      <span class="section-tag">📥 Download</span>
+      <h2>Let Connect APK ကို ဒေါင်းလုဒ်ရယူပါ</h2>
+      <p>Android ဖုန်းအားလုံးမှာ အသုံးပြုနိုင်ပါတယ်</p>
+    </div>
+    <div class="download-card reveal">
+      <div class="download-info">
+        <h2>အခမဲ့ <span style="color: var(--accent);">Download</span> ရယူပါ</h2>
+        <p>
+          Let Connect VPN ကို ယခုပဲ ဒေါင်းလုဒ်ရယူပြီး လုံခြုံစိတ်ချရတဲ့ 
+          အင်တာနက်အသုံးပြုမှုကို စတင်လိုက်ပါ။ Free Server အားလုံး အသုံးပြုနိုင်ပြီး 
+          ကြေညာ ads လုံးဝ မပါပါဘူး။
+        </p>
+        <a href="https://example.com/let-connect.apk" class="btn-primary" target="_blank">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download APK (Free)
+        </a>
+        <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-dim);">
+          📦 Version 1.0 &nbsp;|&nbsp; 📏 ~15 MB &nbsp;|&nbsp; 🤖 Android 5.0+
+        </p>
+      </div>
+      <div class="download-poster">
+        <!-- ===== POSTER IMAGE ===== -->
+        <!-- ဒီ src မှာ မင့် poster ပုံ link ထည့်ပါ -->
+        <div class="poster-placeholder">
+          <img src="https://via.placeholder.com/350x620/121638/6c63ff?text=Let+Connect+VPN+Poster" alt="Let Connect VPN Poster" 
+               onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'poster-icon\'>🖼️</div><span>Poster ပုံထည့်ရန်</span>';" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="section-header reveal">
+      <span class="section-tag">📞 Contact</span>
+      <h2>ဆက်သွယ်ရန်</h2>
+      <p>Premium ဝယ်ယူလိုပါက သို့မဟုတ် မေးမြန်းလိုပါက ဆက်သွယ်ပါ</p>
+    </div>
+    <div class="contact-grid">
+      <a href="https://t.me/iqowoq" target="_blank" class="contact-card telegram reveal">
+        <div class="contact-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </div>
+        <h3>Telegram</h3>
+        <p>@iqowoq</p>
+      </a>
+      <a href="viber://chat?number=09688171999" class="contact-card viber reveal">
+        <div class="contact-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.5 6.854.5 10.39v.003c0 3.536.802 6.204 2.52 7.922 2.092 2.09 5.592 2.397 7.544 2.46h.003c.618 0 1.098-.002 1.468-.015l.054.002c.77 0 1.578-.04 2.434-.153l-.006.004c3.768-.5 5.958-2.385 6.204-2.623l.004-.004c.758-.758.86-1.358.64-1.878-.222-.518-.86-.818-1.26-.918-.12-.03-2.16-.662-2.82-1.042-.402-.232-.862-.392-1.222-.272-.252.084-.432.312-.738.66-.09.102-.204.232-.34.38-.298.324-.572.498-.808.548-.19.04-.38.006-.572-.07a10.14 10.14 0 0 1-3.672-2.394 10.097 10.097 0 0 1-2.39-3.672c-.078-.192-.112-.382-.072-.572.05-.236.224-.51.548-.808.148-.136.278-.25.38-.34.348-.306.576-.486.66-.738.12-.36-.04-.82-.272-1.222-.38-.66-1.012-2.7-1.042-2.82-.1-.4-.4-1.038-.918-1.26A1.145 1.145 0 0 0 12.384 0h-.003c-.32 0-.66.004-.98.008v-.001zm.655 1.5c.293-.003.578-.005.83-.003.08.002.16.016.2.032.086.056.24.39.318.68.06.21.69 2.244 1.04 2.85.18.308.17.388.148.45-.038.092-.096.148-.452.466-.116.102-.252.224-.4.37-.35.342-.55.69-.65 1.088-.092.366-.04.746.116 1.13a11.66 11.66 0 0 0 2.756 4.222 11.66 11.66 0 0 0 4.222 2.756c.384.156.764.208 1.13.116.398-.1.746-.3 1.088-.65.146-.148.268-.284.37-.4.318-.356.374-.414.466-.452.062-.022.142-.032.45.148.606.35 2.64.98 2.85 1.04.29.078.624.232.68.318.016.04.03.12.032.2.008.264-.08.54-.466.938-.21.214-2.17 1.87-5.43 2.303-.772.102-1.512.14-2.228.14l-.06-.004c-.372.014-.828.016-1.42.014h-.003c-1.8-.058-4.716-.348-6.416-2.048C2.832 16.276 2 13.856 2 10.39v-.003C2 7.12 2.832 4.7 4.342 3.2 6.222 1.35 9.686 1.04 11.394 1.012l.002-.005.002-.005.001-.001z"/></svg>
+        </div>
+        <h3>Viber</h3>
+        <p>09688171999</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">🛡️</div>
+        <span class="footer-logo-text">Let Connect VPN</span>
+      </div>
+      <p>&copy; 2026 Let Connect VPN. All rights reserved. Safe & Fast Browsing.</p>
+    </div>
+  </footer>
+
+  <!-- Scroll to top -->
+  <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- ============ JAVASCRIPT ============ -->
+  <script>
+    // === Particles ===
+    (function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 20 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 20) + 's';
+        p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+        const colors = ['rgba(108,99,255,0.5)','rgba(0,212,170,0.5)','rgba(0,180,216,0.4)'];
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        container.appendChild(p);
+      }
+    })();
+
+    // === Navbar scroll ===
+    const navbar = document.getElementById('navbar');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      if (window.scrollY > 400) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+
+    // === Scroll reveal ===
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // === Mobile menu toggle (simple) ===
+    function toggleMenu() {
+      const links = document.querySelector('.nav-links');
+      if (links.style.display === 'flex') {
+        links.style.display = 'none';
+      } else {
+        links.style.display = 'flex';
+        links.style.flexDirection = 'column';
+        links.style.position = 'absolute';
+        links.style.top = '70px';
+        links.style.right = '30px';
+        links.style.background = 'rgba(10,14,39,0.95)';
+        links.style.padding = '20px 30px';
+        links.style.borderRadius = '16px';
+        links.style.border = '1px solid rgba(108,99,255,0.2)';
+        links.style.backdropFilter = 'blur(20px)';
+        links.style.gap = '18px';
+      }
+    }
+
+    // === Smooth scroll for anchor links ===
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile menu
+          const links = document.querySelector('.nav-links');
+          if (window.innerWidth <= 968) links.style.display = 'none';
+        }
+      });
+    });
+
+    // === Typing effect for badge ===
+    (function() {
+      const badge = document.querySelector('.hero-badge');
+      if (!badge) return;
+      const spans = ['Secure & Fast VPN', 'No Ads Guaranteed', 'Free & Premium'];
+      let current = 0;
+      setInterval(() => {
+        current = (current + 1) % spans.length;
+        badge.style.opacity = 0;
+        setTimeout(() => {
+          badge.lastChild.textContent = ' ' + spans[current];
+          badge.style.opacity = 1;
+        }, 300);
+      }, 3000);
+      badge.style.transition = 'opacity 0.3s';
+    })();
+  </script>
+</body>
+</html>
